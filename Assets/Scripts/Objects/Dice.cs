@@ -21,9 +21,9 @@ public class Dice : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            float x = Random.Range(0, 500);
-            float y = Random.Range(0, 500);
-            float z = Random.Range(0, 500);
+            float x = Random.Range(0, 1500);
+            float y = Random.Range(0, 1500);
+            float z = Random.Range(0, 1500);
 
             transform.position = dicePosition;
             transform.rotation = Quaternion.identity;
