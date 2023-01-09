@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class Dice : MonoBehaviour
 {
-    static Rigidbody rb;
-    public static Vector3 diceVelocity;
+    private Rigidbody rb;
+    public int diceNumberResult;
 
-    Vector3 dicePosition;
+    private Vector3 dicePosition;
 
-    public static bool isRolling { get; set; }
-    public static int DiceNumber { get; set; }
+    public bool isRolling;
 
     void Start()
     {
@@ -18,24 +17,52 @@ public class Dice : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        diceVelocity = rb.velocity;
-
+        // Se o usuário apertar a tecla espaço...
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            // Rola o dado
             RollDice();
+            //Debug.Log("O dado foi lançado...");
+        }
+
+        if (isRolling)
+        {
+            Debug.Log("O dado está rolando...");
+        }
+
+        // Se o dado estiver rolando e parar de se mover...
+        if (isRolling && rb.velocity.magnitude < 0.1)
+        {
+            // Checa novamente se parou mesmo
+            StartCoroutine(WaitAndCalculateResult());
         }
     }
 
-    public static void StopDice()
+    IEnumerator WaitAndCalculateResult()
+    {
+        // Pausa a execução do script por 0.6 segundos
+        yield return new WaitForSeconds(0.4f);
+
+        if (rb.velocity.magnitude < 0.1)
+        {
+            isRolling = false;
+        }
+        else
+        {
+            isRolling = true;
+        }
+    }
+
+    public void StopDice()
     {
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
     }
 
-    public void RollDice(){
+    public void RollDice()
+    {
         float x = Random.Range(0, 1500);
         float y = Random.Range(0, 1500);
         float z = Random.Range(0, 1500);
@@ -45,7 +72,6 @@ public class Dice : MonoBehaviour
 
         rb.AddForce(transform.up * 500);
         rb.AddTorque(x, y, z);
-
         isRolling = true;
     }
 }

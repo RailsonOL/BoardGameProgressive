@@ -27,40 +27,47 @@ public class PlayerMoviment : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.RightArrow) && !isMoving)
-        {
-            StartCoroutine(MoveNext());
-        }
+    // void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.RightArrow))
+    //     {
+    //         StartCoroutine(MoveNext(3));
+    //     }
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow) && !isMoving)
+    //     if (Input.GetKeyDown(KeyCode.LeftArrow))
+    //     {
+    //         StartCoroutine(MovePrevious());
+    //     }
+    // }
+
+    public IEnumerator MoveNext(int numMoves)
+    {
+        if (!isMoving)
         {
-            StartCoroutine(MovePrevious());
+
+            for (int i = 0; i < numMoves; i++)
+            {
+                isMoving = true;
+                float elapsedTime = 0;
+                origPos = transform.position;
+                // Obtém o próximo tile usando o índice atual do peão no array allTiles
+                targetPos = allTiles[(currentTileIndex + 1) % allTiles.Length].position;
+                while (elapsedTime < timeToMoving)
+                {
+                    transform.position = Vector3.Lerp(origPos, targetPos + new Vector3(0f, 2.5f, 0f), (elapsedTime / timeToMoving));
+                    elapsedTime += Time.deltaTime;
+                    yield return new WaitForEndOfFrame();
+                }
+                transform.position = targetPos + new Vector3(0f, 1.0f, 0f);
+                isMoving = false;
+                // Atualiza o índice atual do peão e o tile atual
+                currentTileIndex = (currentTileIndex + 1) % allTiles.Length;
+                currentTile = allTiles[currentTileIndex];
+            }
         }
     }
 
-    private IEnumerator MoveNext()
-    {
-        isMoving = true;
-        float elapsedTime = 0;
-        origPos = transform.position;
-        // Obtém o próximo tile usando o índice atual do peão no array allTiles
-        targetPos = allTiles[(currentTileIndex + 1) % allTiles.Length].position;
-        while (elapsedTime < timeToMoving)
-        {
-            transform.position = Vector3.Lerp(origPos, targetPos + new Vector3(0f, 2.5f, 0f), (elapsedTime / timeToMoving));
-            elapsedTime += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-        transform.position = targetPos + new Vector3(0f, 1.0f, 0f);
-        isMoving = false;
-        // Atualiza o índice atual do peão e o tile atual
-        currentTileIndex = (currentTileIndex + 1) % allTiles.Length;
-        currentTile = allTiles[currentTileIndex];
-    }
-
-    private IEnumerator MovePrevious()
+    public IEnumerator MovePrevious()
     {
         isMoving = true;
         float elapsedTime = 0;
