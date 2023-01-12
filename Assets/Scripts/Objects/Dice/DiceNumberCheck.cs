@@ -19,12 +19,15 @@ public class DiceNumberCheck : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            StartCoroutine(playerMoviment.MoveNext(dice.diceNumberResult));
+
+                playerMoviment.MoveNext(dice.diceNumberResult);
+
+            // playerMoviment.MoveNext(dice.diceNumberResult);
         }
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            StartCoroutine(playerMoviment.MovePrevious());
+            playerMoviment.MovePrevious(dice.diceNumberResult);
         }
     }
 
